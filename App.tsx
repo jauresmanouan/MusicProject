@@ -1,118 +1,60 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+// Liste des notes de musique
+const notes = ['Do', 'Do#', 'Ré', 'Ré#', 'Mi', 'Mi#', 'Fa', 'Fa#', 
+              'Sol', 'Sol#', 'La', 'La#', 'Si', 'Si#'];
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+// Fonction pour obtenir une note aléatoire
+const getRandomNote = () => {
+  const randomIndex = Math.floor(Math.random() * notes.length);
+  return notes[randomIndex];
+};
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+// Composant principal de l'application
+const MusicApp = () => {
+  // État pour stocker la note actuelle
+  const [currentNote, setCurrentNote] = useState('');
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  // Utilisation de useEffect pour exécuter du code après le rendu initial
+  useEffect(() => {
+    // Définir un intervalle pour changer la note toutes les 2 secondes
+    const intervalId = setInterval(() => {
+      const randomNote = getRandomNote();
+      setCurrentNote(randomNote);
+    }, 3000);
+
+    // Nettoyer l'intervalle lorsque le composant est démonté
+    return () => clearInterval(intervalId);
+  }, []); // Le tableau vide signifie que useEffect s'exécute une seule fois après le montage du composant
+
+  // Rendu de l'interface utilisateur
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.noteText}>{currentNote}</Text>
     </View>
   );
-}
+  
+};
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
+// Styles pour l'interface utilisateur
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'red',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
+  noteText: {
+    fontSize: 150,
+    fontFamily: 'Montserrat',
+    fontWeight:'bold',
+    color: 'white',
+    shadowColor: 'blue',
+    shadowOffset: {width: 7, height: 7},
+    shadowOpacity: 1,
+    shadowRadius: 0,
   },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+})
 
-export default App;
+export default MusicApp;
